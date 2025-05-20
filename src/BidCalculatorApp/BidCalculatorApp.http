@@ -1,0 +1,6 @@
+@BidCalculatorApp_HostAddress = http://localhost:5079
+
+GET {{BidCalculatorApp_HostAddress}}/api/V1/calculate
+Accept: application/json
+
+###

@@ -1,0 +1,11 @@
+
+using System.Text.Json.Nodes;
+using BidCalculatorApp.BidCalculator.Domain;
+
+namespace BidCalculatorApp.BidCalculator.Application
+{
+    public interface IBidCalculator
+    {
+        public JsonObject CalculateTotal(decimal price, VehicleType type);
+    }
+}
