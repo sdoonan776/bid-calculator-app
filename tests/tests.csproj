@@ -22,4 +22,9 @@
     <ProjectReference Include="..\src\BidCalculatorApp\BidCalculatorApp.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="../src/BidCalculatorApp/Program.cs" />
+  </ItemGroup>
+
+
 </Project>
