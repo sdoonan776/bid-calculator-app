@@ -6,6 +6,6 @@ namespace BidCalculatorApp.BidCalculator.Application
 {
     public interface IBidCalculator
     {
-        public JsonObject CalculateTotal(decimal price, VehicleType type);
+        public BidCalculatorResponse CalculateTotal(decimal price, VehicleType type);
     }
 }

@@ -27,9 +27,9 @@ namespace UnitTests.Application
         [Fact]
         public void CalculateTotal_ReturnsExpectedTotal_WhenVehicleTypeIsCommon()
         {
-            JsonObject result = _bidCalculator.CalculateTotal(398m, VehicleType.Common);
+            BidCalculatorResponse result = _bidCalculator.CalculateTotal(398m, VehicleType.Common);
 
-            Assert.Equal(550.76m, result["total"]!.GetValue<decimal>());
+            Assert.Equal(550.76m, result.Total);
 
             foreach (var mock in _feeMocks)
             {
@@ -40,7 +40,7 @@ namespace UnitTests.Application
         [Fact]
         public void CalculateTotal_ReturnsExpectedFeeBreakdown_WhenVehicleTypeIsCommon()
         {
-            JsonObject result = _bidCalculator.CalculateTotal(398m, VehicleType.Common);
+            BidCalculatorResponse result = _bidCalculator.CalculateTotal(398m, VehicleType.Common);
 
             var expectedFees = new Dictionary<string, decimal>
             {
@@ -50,7 +50,7 @@ namespace UnitTests.Application
                 ["storageFee"] = 100.00m
             };
 
-            var actualFees = result["fees"]!.Deserialize<Dictionary<string, decimal>>();
+            Dictionary<string, decimal> actualFees = result.FeeItems;
 
             Assert.Equal(expectedFees, actualFees);
 
@@ -63,9 +63,9 @@ namespace UnitTests.Application
         [Fact]
         public void CalculateTotal_ReturnsExpectedTotal_WhenVehicleTypeIsLuxury()
         {
-            JsonObject result = _bidCalculator.CalculateTotal(1800.00m, VehicleType.Luxury);
+            BidCalculatorResponse result = _bidCalculator.CalculateTotal(1800.00m, VehicleType.Luxury);
 
-            Assert.Equal(2167.00m, result["total"]!.GetValue<decimal>());
+            Assert.Equal(2167.00m, result.Total);
             foreach (var mock in _feeMocks)
             {
                 mock.Verify(f => f.Calculate(1800.00m, VehicleType.Luxury), Times.Once);
@@ -75,7 +75,7 @@ namespace UnitTests.Application
         [Fact]
         public void CalculateTotal_ReturnsExpectedFeeBreakdown_WhenVehicleTypeIsLuxury()
         {
-            JsonObject result = _bidCalculator.CalculateTotal(1800.00m, VehicleType.Luxury);
+            BidCalculatorResponse result = _bidCalculator.CalculateTotal(1800.00m, VehicleType.Luxury);
 
             var expectedFees = new Dictionary<string, decimal>
             {
@@ -85,7 +85,7 @@ namespace UnitTests.Application
                 ["storageFee"] = 100.00m
             };
 
-            var actualFees = result["fees"]!.Deserialize<Dictionary<string, decimal>>();
+            var actualFees = result.FeeItems;
 
             Assert.Equal(expectedFees, actualFees);
             
@@ -121,7 +121,7 @@ namespace UnitTests.Application
         {
             var mock = new Mock<IFee>();
 
-            mock.SetupGet(f => f.FeeName).Returns(feeName);
+            mock.SetupGet(x => x.FeeName).Returns(feeName);
 
             mock.Setup(f => f.Calculate(It.IsAny<decimal>(), It.Is<VehicleType>(t => t == VehicleType.Common)))
                 .Returns(commonFee);
@@ -129,7 +129,7 @@ namespace UnitTests.Application
             mock.Setup(f => f.Calculate(It.IsAny<decimal>(), It.Is<VehicleType>(t => t == VehicleType.Luxury)))
                 .Returns(luxuryFee);
 
-            return mock;
+            return mock;    
         }
     }
 }

@@ -1,6 +1,7 @@
 using BidCalculatorApp.BidCalculator.Domain;
 using BidCalculatorApp.BidCalculator.Fees;
 using BidCalculatorApp.Helpers;
+using Microsoft.VisualBasic;
 using System.Text.Json.Nodes;
 
 namespace BidCalculatorApp.BidCalculator.Application
@@ -13,7 +14,7 @@ namespace BidCalculatorApp.BidCalculator.Application
             _fees = fees;
         }
 
-        public JsonObject CalculateTotal(decimal price, VehicleType type)
+        public BidCalculatorResponse CalculateTotal(decimal price, VehicleType type)
         {
             if (price < 0m)
                 throw new Exception("Invalid Price, please enter a non negative number");
@@ -21,23 +22,29 @@ namespace BidCalculatorApp.BidCalculator.Application
             if (!Enum.IsDefined(typeof(VehicleType), type))
                 throw new Exception("Invalid Vehicle Type");
 
-            JsonObject feesJson = new JsonObject();
+            Dictionary<string, decimal> feeItems = new Dictionary<string, decimal>();
             decimal feesTotal = 0m;
 
             foreach (IFee fee in _fees)
             {
-                decimal value = fee.Calculate(price, type);
-                feesJson.Add(fee.FeeName, value);
-                feesTotal += value;
+                try
+                {
+                    decimal value = fee.Calculate(price, type);
+                    feeItems.Add(fee.FeeName, value);
+                    feesTotal += value;
+                } catch (Exception error) {
+                    Console.WriteLine("Exception: " + error.Message);
+                    throw; 
+                }
             }
 
-            decimal total = Money.Round(feesTotal + price);    
+            decimal total = Money.Round(feesTotal + price);
 
-            return new JsonObject
+            return new BidCalculatorResponse
             {
-                ["total"] = total,
-                ["fees"] = feesJson
-            };   
+                Total = total,
+                FeeItems = feeItems
+            };
         }
     }
 }

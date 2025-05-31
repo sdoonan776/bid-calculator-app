@@ -21,8 +21,8 @@ namespace BidCalculatorApp.Api.Controllers
         public IActionResult Get(decimal price, string type)
         {
             VehicleType vehicleType = Enum.Parse<VehicleType>(type, true);
-            JsonObject total = _bidCalculator.CalculateTotal(price, vehicleType);
-            return Ok(new { total });
+            BidCalculatorResponse total = _bidCalculator.CalculateTotal(price, vehicleType);
+            return Ok(total);
         }
         
     }
