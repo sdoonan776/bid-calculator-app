@@ -121,7 +121,7 @@ namespace UnitTests.Application
         {
             var mock = new Mock<IFee>();
 
-            mock.SetupGet(f => f.FeeName).Returns(feeName);
+            mock.SetupGet(x => x.FeeName).Returns(feeName);
 
             mock.Setup(f => f.Calculate(It.IsAny<decimal>(), It.Is<VehicleType>(t => t == VehicleType.Common)))
                 .Returns(commonFee);
