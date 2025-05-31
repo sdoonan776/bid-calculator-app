@@ -7,7 +7,7 @@ interface FeesTableProps
     fees: BidFees 
 }
 
-const props = defineProps<FeesTableProps>();
+defineProps<FeesTableProps>();
 
 </script>
 
