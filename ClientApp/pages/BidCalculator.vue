@@ -21,8 +21,8 @@ const calculateFee = async () => {
     error.value = "";
     try {
         const result = await useCalculateFees(price.value, type.value);
-        total.value = result.total.total;
-        fees.value = result.total.fees;
+        total.value = result.total;
+        fees.value = result.feeItems;
     } catch (err: unknown) {
         error.value = (err as Error).message ?? 'Something went wrong.';
     }
